@@ -1,0 +1,4 @@
+name: NoBrakeBlazeSpawner
+version: '1.0-SNAPSHOT'
+main: seml.noBrakeBlazeSpawner.NoBrakeBlazeSpawner
+api-version: '1.21'
