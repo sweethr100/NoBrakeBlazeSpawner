@@ -7,6 +7,7 @@ import org.bukkit.entity.EntityType
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.event.block.BlockBreakEvent
+import org.bukkit.event.entity.EntityExplodeEvent
 import org.bukkit.plugin.java.JavaPlugin
 
 class NoBrakeBlazeSpawner : JavaPlugin(), Listener{
@@ -29,6 +30,13 @@ class NoBrakeBlazeSpawner : JavaPlugin(), Listener{
                 event.isCancelled = true
                 event.player.sendMessage("블레이즈 스포너는 부술 수 없습니다!")
             }
+        }
+    }
+
+    @EventHandler
+    fun onEntityExplode(event: EntityExplodeEvent) {
+        event.blockList().removeIf { block ->
+            block.type == Material.SPAWNER && (block.state as? CreatureSpawner)?.spawnedType == EntityType.BLAZE
         }
     }
 }
