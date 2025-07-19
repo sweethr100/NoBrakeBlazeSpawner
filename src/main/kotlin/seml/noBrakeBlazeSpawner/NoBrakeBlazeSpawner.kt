@@ -3,22 +3,25 @@ package seml.noBrakeBlazeSpawner
 import org.bukkit.Bukkit
 import org.bukkit.Material
 import org.bukkit.block.CreatureSpawner
+import org.bukkit.configuration.file.FileConfiguration
 import org.bukkit.entity.EntityType
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.event.block.BlockBreakEvent
 import org.bukkit.event.entity.EntityExplodeEvent
 import org.bukkit.plugin.java.JavaPlugin
+import org.bukkit.ChatColor
 
 class NoBrakeBlazeSpawner : JavaPlugin(), Listener{
+    private lateinit var config: FileConfiguration
+    private var customMsg: String = "블레이즈 스포너는 부술 수 없습니다!"  // 기본 메시지
 
     override fun onEnable() {
-        Bukkit.getPluginManager().registerEvents(this, this)
-        logger.info("NoBreakBlazeSpawner 플러그인이 활성화되었습니다.")
-    }
+        saveDefaultConfig()
+        config = getConfig()
+        customMsg = ChatColor.translateAlternateColorCodes('&', config.getString("message", customMsg)!!)
 
-    override fun onDisable() {
-        logger.info("NoBreakBlazeSpawner 플러그인이 비활성화되었습니다.")
+        Bukkit.getPluginManager().registerEvents(this, this)
     }
 
     @EventHandler
@@ -28,7 +31,7 @@ class NoBrakeBlazeSpawner : JavaPlugin(), Listener{
             val spawner = block.state as CreatureSpawner
             if (spawner.spawnedType == EntityType.BLAZE) {
                 event.isCancelled = true
-                event.player.sendMessage("블레이즈 스포너는 부술 수 없습니다!")
+                event.player.sendMessage(customMsg)
             }
         }
     }
